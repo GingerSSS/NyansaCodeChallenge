@@ -3,21 +3,10 @@ package com.Nyansa;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.*;
-import java.util.Collections;
-import java.util.stream.Stream;
 
 public class Main {
-    public void Collecturl (List<String> list) {
-        int n = list.size();
-        TimenWeb[] timenweb = new TimenWeb[n];
-        for (int i = 0; i < n; i++){
-            timenweb[i] = new TimenWeb(list.get(i));
-            // System.out.println(timenweb[i].date);
-            // System.out.println(timenweb[i].website);
-        }
-
+    public void Collecturl (TimenWeb[] timenweb) {
         // Map<date, Map<url, freq>>
         Map<Integer, Map<String, Integer>> map = new HashMap<>();
         for(TimenWeb item : timenweb){
@@ -29,73 +18,84 @@ public class Main {
             if(!urlFreq.containsKey(item.website)){
                 urlFreq.put(item.website, 0);
             }
-            // update the url freq
+            // update the url freq in the map
             urlFreq.put(item.website, urlFreq.get(item.website) + 1);
+            // no need to put back to map, it pass by reference
         }
 
-        // Sort the keySet in the map, ordered by date from smaller one
+        // Sort the map by date(keySet)
         Object[] keySet = map.keySet().toArray();
         Arrays.sort(keySet);
         for(Object d : keySet){
             // print the date
             printTheDate((int) d);
-
-            // sort the Map<url, freq> by value
-//            Map<String, Integer> mapFreq = map.get(d);
-//            MyComparator sortByValue = new MyComparator(mapFreq);
-//            TreeMap<String, Integer> sortedMap = new TreeMap<>(sortByValue);
-//            sortedMap.putAll(mapFreq);
-
-//            Map<String, Integer> mapFreq = map.get(d);
-//            Stream<Map.Entry<String, Integer>> sorted =
-//                    mapFreq.entrySet().stream()
-//                            .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()));
-
-            // print the url and its freq
-//            printUrlFreq(sorted);
+            // print the url & freq
             printUrlFreq(map.get(d));
         }
     }
+
     private void printTheDate(int d){
-//        System.out.println(d);
+        // convert the d to Unix Timestamp (ms)
         long timestamp = (long) d * 24 * 60 * 60 * 1000;
-        DateFormat simple = new SimpleDateFormat("MM/dd/yyyy");
+        // simpleDateFormat refer: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+        DateFormat simple = new SimpleDateFormat("MM/dd/yyyy z");
         simple.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String dateString = simple.format(timestamp);
-        System.out.println(dateString + " GMT");
+        String str = simple.format(timestamp);
+        System.out.println(str);
     }
+
     private void printUrlFreq(Map<String, Integer> urlFreq){
-        for(String str : urlFreq.keySet()){
-            int freq = urlFreq.get(str);
-            System.out.println(str + " " + freq);
+        // sort the Map<url, freq> by freq (value)
+        // Refer: https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/
+
+        List<Map.Entry<String, Integer>> ordered = new LinkedList<Map.Entry<String, Integer>>(urlFreq.entrySet());
+        Collections.sort(ordered, new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            // Override the comparator function to sort the map with descending order
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                if (o1.getValue() == o2.getValue())
+                    return 0;
+                return o1.getValue() > o2.getValue() ? -1 : 1;
+            }
+        });
+
+        // print the sorted list
+        for(Map.Entry<String, Integer> i : ordered){
+            System.out.println(i.getKey() + " " + i.getValue());
         }
     }
+
+    /* Convert input: list<String> --> Time&Web Object */
+    private TimenWeb[] saveToObj(List<String> list){
+        TimenWeb[] timenweb = new TimenWeb[list.size()];
+        for (int j = 0; j < list.size(); j++){
+            timenweb[j] = new TimenWeb(list.get(j));
+            // System.out.println(timenweb[j].date);
+            // System.out.println(timenweb[j].website);
+        }
+        return timenweb;
+    }
+
     public static void main(String[] args) throws Exception{
 	// write your code here
 
         File file = new File("input.txt");
         Scanner sc = new Scanner(file);
         List<String> list = new LinkedList<>();
-        int i = 0;
+
+        /* Save the input to a linked list */
+        // int i = 0;
         while(sc.hasNextLine()){
             // System.out.println(sc.nextLine());
             list.add(sc.nextLine());
             // System.out.println(list.get(i++));
         }
-        // System.out.println(list.size());
+
+        /* New a Main object, call the classify functions */
         Main main = new Main();
-        main.Collecturl(list);
+        // Convert the input list to a Time&Web object, with variable .date and .website
+        TimenWeb[] timenweb = main.saveToObj(list);
+        // call the function with Time&Web object array input
+        main.Collecturl(timenweb);
     }
 }
-//class MyComparator implements Comparator<Integer> {
-//    Map<String, Integer> map;
-//    public MyComparator(Map<String, Integer> map){
-//        this.map = map;
-//    }
-//    @Override
-//    public int compare(String m1, String m2){
-//        if(map.get(m1) == map.get(m2))
-//            return 0;
-//        return map.get(m1) > map.get(m2) ? -1 : 1;
-//    }
-//}
