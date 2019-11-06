@@ -5,16 +5,18 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/* Time Complexity is O(n) - details please see github, README */
 public class Main {
+    /* Classification */
     public void Collecturl (TimenWeb[] timenweb) {
-        // Map<date, Map<url, freq>>
-        Map<Integer, Map<String, Integer>> map = new HashMap<>();
+        // Map< date, Map<url, freq> >
+        Map<Integer, Map<String, Integer>> dateMap = new HashMap<>();
         for(TimenWeb item : timenweb){
-            if(!map.containsKey(item.date)){
-                map.put(item.date, new HashMap<>());
+            if(!dateMap.containsKey(item.date)){
+                dateMap.put(item.date, new HashMap<>());
             }
             // Get the Map<url, freq>
-            Map<String, Integer> urlFreq = map.get(item.date);
+            Map<String, Integer> urlFreq = dateMap.get(item.date);
             if(!urlFreq.containsKey(item.website)){
                 urlFreq.put(item.website, 0);
             }
@@ -24,16 +26,17 @@ public class Main {
         }
 
         // Sort the map by date(keySet)
-        Object[] keySet = map.keySet().toArray();
+        Object[] keySet = dateMap.keySet().toArray();
         Arrays.sort(keySet);
         for(Object d : keySet){
             // print the date
             printTheDate((int) d);
             // print the url & freq
-            printUrlFreq(map.get(d));
+            printUrlFreq(dateMap.get(d));
         }
     }
 
+    /* Help Method: print the date */
     private void printTheDate(int d){
         // convert the d to Unix Timestamp (ms)
         long timestamp = (long) d * 24 * 60 * 60 * 1000;
@@ -44,6 +47,7 @@ public class Main {
         System.out.println(str);
     }
 
+    /* Help Method: print the url & freq */
     private void printUrlFreq(Map<String, Integer> urlFreq){
         // sort the Map<url, freq> by freq (value)
         // Refer: https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/
@@ -70,25 +74,18 @@ public class Main {
         TimenWeb[] timenweb = new TimenWeb[list.size()];
         for (int j = 0; j < list.size(); j++){
             timenweb[j] = new TimenWeb(list.get(j));
-            // System.out.println(timenweb[j].date);
-            // System.out.println(timenweb[j].website);
         }
         return timenweb;
     }
 
     public static void main(String[] args) throws Exception{
-	// write your code here
-
         File file = new File("input.txt");
         Scanner sc = new Scanner(file);
         List<String> list = new LinkedList<>();
 
         /* Save the input to a linked list */
-        // int i = 0;
         while(sc.hasNextLine()){
-            // System.out.println(sc.nextLine());
             list.add(sc.nextLine());
-            // System.out.println(list.get(i++));
         }
 
         /* New a Main object, call the classify functions */
