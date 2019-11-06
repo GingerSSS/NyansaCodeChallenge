@@ -8,6 +8,7 @@ import java.util.*;
 /* Time Complexity is O(n) - details please see github, README */
 
 public class Main {
+
     /* Classification */
     public void Collecturl (TimenWeb[] timenweb) {
         Map<Integer, Map<String, Integer>> dateMap = new HashMap<>();
@@ -59,6 +60,15 @@ public class Main {
         }
     }
 
+    /* Convert input: list<String> --> Time&Web Object */
+    private TimenWeb[] saveToObj(List<String> list){
+        TimenWeb[] timenweb = new TimenWeb[list.size()];
+        for (int j = 0; j < list.size(); j++){
+            timenweb[j] = new TimenWeb(list.get(j));
+        }
+        return timenweb;
+    }
+
     public static void main(String[] args) throws Exception {
         File file = new File("input.txt");
         Scanner sc = new Scanner(file);
@@ -71,14 +81,5 @@ public class Main {
         Main main = new Main();
         TimenWeb[] timenweb = main.saveToObj(list);
         main.Collecturl(timenweb);
-    }
-
-    /* Convert input Method: list<String> --> Time&Web Object */
-    private TimenWeb[] saveToObj(List<String> list){
-        TimenWeb[] timenweb = new TimenWeb[list.size()];
-        for (int j = 0; j < list.size(); j++){
-            timenweb[j] = new TimenWeb(list.get(j));
-        }
-        return timenweb;
     }
 }
