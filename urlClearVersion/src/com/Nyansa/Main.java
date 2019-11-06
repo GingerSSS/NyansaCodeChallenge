@@ -5,16 +5,18 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/* Time Complexity is O(n) - details please see github, README */
+
 public class Main {
     /* Classification */
     public void Collecturl (TimenWeb[] timenweb) {
-        Map<Integer, Map<String, Integer>> map = new HashMap<>();
+        Map<Integer, Map<String, Integer>> dateMap = new HashMap<>();
         for(TimenWeb item : timenweb){
-            if(!map.containsKey(item.date)){
-                map.put(item.date, new HashMap<>());
+            if(!dateMap.containsKey(item.date)){
+                dateMap.put(item.date, new HashMap<>());
             }
 
-            Map<String, Integer> urlFreq = map.get(item.date);
+            Map<String, Integer> urlFreq = dateMap.get(item.date);
             if(!urlFreq.containsKey(item.website)){
                 urlFreq.put(item.website, 0);
             }
@@ -22,12 +24,12 @@ public class Main {
             urlFreq.put(item.website, urlFreq.get(item.website) + 1);
         }
 
-        Object[] keySet = map.keySet().toArray();
+        Object[] keySet = dateMap.keySet().toArray();
         Arrays.sort(keySet);
 
         for(Object d : keySet){
             printTheDate((int) d);
-            printUrlFreq(map.get(d));
+            printUrlFreq(dateMap.get(d));
         }
     }
 
