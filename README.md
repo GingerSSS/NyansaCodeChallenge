@@ -1,11 +1,14 @@
 # NyansaCodeChallenge
+
 This is the code challenge.
 
-I provide two versions:
+#### I provide two versions:
+
   1. urlClearVersion - A clear version of code, with less comment
   2. Collecturl - A full version of code, with comment in each step, method and helper method
 
-The idea is: 
+#### The idea: 
+
 (assume the line of input data is n, happened on m days, max urls/day is p)
 
   1. read the input from the file
@@ -26,12 +29,14 @@ The idea is:
            (a) sort the urlFreq map by freq(value), in descending order             - O(plogp)
            (b) print the sorted map                                                 - O(mp)
            
-From the requirement I know the m,p are much smaller than n, then the total Time Complexity is O(n)
+#### Time Complexity
+  From the requirement I know the m,p are much smaller than n, then the total Time Complexity is O(n)
 
 
 
-# Requirement
-Problem:
+## Requirement
+
+### Problem:
 You’re given an input file. Each line consists of a timestamp (unix epoch in seconds) and a url separated by ‘|’ (pipe operator). The entries are not in any chronological order. Your task is to produce a daily summarized report on url hit count, organized daily (mm/dd/yyyy GMT) with the earliest date appearing first. For each day, you should display the number of times each url is visited in the order of highest hit count to lowest count. Your program should take in one command line argument: input file name. The output should be printed to stdout. You can assume that the cardinality (i.e. number of distinct values) of hit count values and the number of days are much smaller than the number of unique URLs. You may also assume that number of unique URLs can fit in memory, but not necessarily the entire file.
 
 input.txt
